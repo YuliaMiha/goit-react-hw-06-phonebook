@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ContactForm from './components/ContactForm/ContactForm';
 import ContactList from './components/ContactList/ContactList';
 import Filter from './components/Filter/Filter';
-import {useLS} from './components/hooks/useLS';
+import {useLS} from './hooks/useLS';
 
 
 const initial = [

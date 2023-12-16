@@ -4,24 +4,46 @@ import PropTypes from 'prop-types';
 
 import { nanoid } from 'nanoid';
 import css from './ContactForm.module.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectContacts } from '../../redux/contact/contactSelector';
+import { addContactsAction } from '../../redux/contact/contactSlice';
 
-export const ContactForm = ({ onAddContact }) => {
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const dispatch = useDispatch();
+
   const actions = {
     name: setName,
     number: setNumber,
   };
+
   const handleChange = e => {
     const { name, value } = e.target;
     actions[name](value);
   };
 
+  const contacts = useSelector(selectContacts);
+
   const handleSubmit = e => {
     e.preventDefault();
-    onAddContact({ name, number, id: nanoid() });
+    const newContact = { name, number, id: nanoid() };
+    if (
+      contacts.some(
+        contact =>
+          contact.name.toLowerCase().trim() === name.toLowerCase().trim() ||
+          contact.number.trim() === number.trim()
+      )
+    ) {
+      return alert(`${name} already exists`);
+    }
+    dispatch(addContactsAction(newContact));
     handleReset();
   };
+
+  
+
   const handleReset = () => {
     console.log(Object.values(actions));
     Object.values(actions).map(item => item(''));
